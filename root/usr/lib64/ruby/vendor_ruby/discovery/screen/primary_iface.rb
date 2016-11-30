@@ -56,9 +56,14 @@ def screen_primary_iface dhcp = false
     primary_mac = lb_ifaces.get_current_as_string
     vlan_id = t_vlan.get
     if dhcp
+      if cmdline('fdi.query_host')
+        success_screen = [:screen_select, 'Organization']
+      else
+        success_screen = [:screen_foreman, primary_mac, cmdline('fdi.organization'), cmdline('fdi.location'), cmdline('fdi.host_group')] 
+      end
       action = Proc.new { configure_network false, primary_mac, nil, nil, nil, vlan_id }
       [:screen_info, action, _("Configuring network via DHCP. This operation can take several minutes to complete."), _("Unable to bring network via DHCP"),
-        [:screen_foreman, primary_mac, nil, cmdline('proxy.url'), cmdline('proxy.type')],
+        success_screen,
         [:screen_network, primary_mac, vlan_id]]
     else
       detect_ip, detect_gw, detect_dns = detect_ipv4_credentials('primary')

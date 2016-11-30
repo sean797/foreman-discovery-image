@@ -156,7 +156,7 @@ def write_tui result = 'success', code, body
   end
 end
 
-def upload(uri = discover_server, type = proxy_type, custom_facts = {})
+def upload(uri = discover_server, type = proxy_type, custom_facts = {}, org = nil, loc = nil , host_group = nil)
   unless uri
     log_err "Could not determine instance type, add foreman.url or proxy.url kernel command parameter"
     return
@@ -189,7 +189,11 @@ def upload(uri = discover_server, type = proxy_type, custom_facts = {})
     facts = Facter.to_hash
   end.each_line { |x| log_err x}
   facts.merge!(custom_facts).merge!(user_input_facts)
-  req.body = {'facts' => facts }.to_json
+  params = {'facts' => facts }
+  params.merge!({'organization' => org}) if !org.nil?
+  params.merge!({'location' => loc}) if !loc.nil?
+  params.merge!({'host_group' => host_group}) if !host_group.nil?
+  req.body = params.to_json
   response = http.request(req)
   if ['200','201'].include? response.code
     log_msg "Response from server #{response.code}: #{response.body}"

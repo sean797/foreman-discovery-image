@@ -1,4 +1,4 @@
-def screen_facts mac, proxy_url, proxy_type
+def screen_facts mac, org, loc, host_group, proxy_url, proxy_type
   custom_facts = new_custom_facts(mac)
 
   b_confirm = Newt::Button.new(-1, -1, _("Confirm"))
@@ -26,7 +26,8 @@ def screen_facts mac, proxy_url, proxy_type
   top_grid.set_field(0, 0, Newt::GRID_SUBGRID, facts_grid, 0, 0, 0, 0, 0, 0)
   top_grid.set_field(0, 1, Newt::GRID_SUBGRID, but_grid, 0, 2, 0, 0, 0, 0)
 
-  top_grid.wrapped_window(_("Custom facts"))
+  top_grid.wrapped_window(_("Custom facts org = #{org} loc = #{loc} hg = #{host_group} proxy = #{proxy_url}"))
+#  top_grid.wrapped_window(_("Custom facts"))
 
   f = Newt::Form.new
   if cmdline("fdi.pxfactname1")
@@ -43,7 +44,7 @@ def screen_facts mac, proxy_url, proxy_type
     (0..8).each_with_index do |ix, _|
       custom_facts[names[ix].get] = values[ix].get if names[ix].get && values[ix].get
     end
-    if perform_upload(proxy_url, proxy_type, custom_facts)
+    if perform_upload(proxy_url, proxy_type, custom_facts, org, loc, host_group)
       [:screen_status, generate_info(' - ' + _('awaiting kexec into installer'))]
     else
       :screen_welcome

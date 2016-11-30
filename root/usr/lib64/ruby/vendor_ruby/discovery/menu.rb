@@ -91,8 +91,8 @@ def configure_network static, mac, ip=nil, gw=nil, dns=nil, vlan=nil
   result
 end
 
-def perform_upload proxy_url, proxy_type, custom_facts
-  upload proxy_url, proxy_type, custom_facts
+def perform_upload proxy_url, proxy_type, custom_facts, org, loc, host_group
+  upload proxy_url, proxy_type, custom_facts, org, loc, host_group
 rescue => e
   error_box("Unable to upload facts", e)
 end

@@ -1,4 +1,4 @@
-def screen_foreman mac = nil, gw = nil, proxy_url = cmdline('proxy.url'), proxy_type = cmdline('proxy.type')
+def screen_foreman mac = nil, org = nil, loc = nil, host_group = nil, proxy_url = cmdline('proxy.url'), proxy_type = cmdline('proxy.type')
   Newt::Screen.centered_window(59, 20, _("Credentials"))
   f = Newt::Form.new
   t_desc = Newt::Textbox.new(2, 2, 54, 6, Newt::FLAG_WRAP)
@@ -32,9 +32,9 @@ def screen_foreman mac = nil, gw = nil, proxy_url = cmdline('proxy.url'), proxy_
       end
     rescue Exception => e
       Newt::Screen.win_message(_("Invalid URL"), _("OK"), _("Not a valid URL") + ": #{url} (#{e})")
-      return [:screen_foreman, mac, gw, url, proxy_type]
+      return [:screen_foreman, mac, org, loc, host_group, proxy_url, proxy_type]
     end
-    [:screen_facts, mac, proxy_url, proxy_type]
+    [:screen_facts, mac, org, loc, host_group, proxy_url, proxy_type]
   else
     :screen_welcome
   end

@@ -28,9 +28,14 @@ def screen_network mac, vlan_id, ip = cmdline('fdi.pxip', ''), gw = cmdline('fdi
       Newt::Screen.win_message(_("Invalid IP"), _("OK"), _("Provide valid CIDR ipaddress with a netmask, gateway and one DNS server"))
       return [:screen_network, mac, vlan_id, ip, gw, dns]
     end
+    if cmdline('fdi.query_host')
+      success_screen = [:screen_select, 'Organization']
+    else
+      success_screen = [:screen_foreman, mac, cmdline('fdi.organization'), cmdline('fdi.location'), cmdline('fdi.host_group')]
+    end
     action = Proc.new { configure_network true, mac, ip, gw, dns, vlan_id }
     [:screen_info, action, _("Configuring network. This operation can take several minutes to complete."), _("Unable to bring up network"),
-      [:screen_foreman, mac, gw],
+      success_screen,
       [:screen_network, mac, vlan_id, ip, gw, dns]]
   else
     :screen_welcome
